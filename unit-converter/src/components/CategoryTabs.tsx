@@ -1,4 +1,9 @@
-import { CategoryType } from '../types'
+import type { CategoryType } from '../types';
+
+interface Props {
+  active: CategoryType;
+  onChange: (cat: CategoryType) => void;
+}
 
 const CATEGORY_LABELS: Record<CategoryType, string> = {
   length: 'Délka',
@@ -6,29 +11,22 @@ const CATEGORY_LABELS: Record<CategoryType, string> = {
   temperature: 'Teplota',
   currency: 'Měna',
   volume: 'Objem',
-}
+};
 
-interface CategoryTabsProps {
-  activeCategory: CategoryType
-  onCategoryChange: (category: CategoryType) => void
-}
-
-function CategoryTabs({ activeCategory, onCategoryChange }: CategoryTabsProps) {
-  const categories: CategoryType[] = ['length', 'weight', 'temperature', 'currency', 'volume']
+export const CategoryTabs = ({ active, onChange }: Props) => {
+  const categories: CategoryType[] = ['length', 'weight', 'temperature', 'currency', 'volume'];
 
   return (
     <div className="category-tabs">
-      {categories.map((category) => (
+      {categories.map((cat) => (
         <button
-          key={category}
-          className={`category-tab ${activeCategory === category ? 'active' : ''}`}
-          onClick={() => onCategoryChange(category)}
+          key={cat}
+          className={`category-tab ${active === cat ? 'active' : ''}`}
+          onClick={() => onChange(cat)}
         >
-          {CATEGORY_LABELS[category]}
+          {CATEGORY_LABELS[cat]}
         </button>
       ))}
     </div>
-  )
-}
-
-export default CategoryTabs
+  );
+};

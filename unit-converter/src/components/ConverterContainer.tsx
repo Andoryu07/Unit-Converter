@@ -1,122 +1,90 @@
-import { useState } from 'react'
-import { CategoryType, ConversionRecord } from '../types'
-import { UNIT_DATA } from '../data/units'
-import CategoryTabs from './CategoryTabs'
-import ConversionForm from './ConversionForm'
-import HistoryList from './HistoryList'
+import { useState, useMemo, useEffect } from 'react';
+import { useLocalStorage } from '../hooks/useLocalStorage';
+import { useExchangeRates } from '../hooks/useExchangeRates';
+import { UNIT_DATA } from '../data/units';
+import type { CategoryType, ConversionRecord } from '../types';
+import { CategoryTabs } from './CategoryTabs';
+import { ConversionForm } from './ConversionForm';
+import { HistoryList } from './HistoryList';
 
-function ConverterContainer() {
-  const [category, setCategory] = useState<CategoryType>('length')
-  const [topValue, setTopValue] = useState('')
-  const [bottomValue, setBottomValue] = useState('')
-  const [topUnit, setTopUnit] = useState(UNIT_DATA['length'][0].value)
-  const [bottomUnit, setBottomUnit] = useState(UNIT_DATA['length'][1].value)
-  const [history, setHistory] = useState<ConversionRecord[]>([])
+export const ConverterContainer = () => {
+  const [category, setCategory] = useState<CategoryType>('length');
+  const [amount, setAmount] = useState<number>(0);
+  const [fromUnit, setFromUnit] = useState(UNIT_DATA[category][0].value);
+  const [toUnit, setToUnit] = useState(UNIT_DATA[category][1].value);
+  const [history, setHistory] = useLocalStorage<ConversionRecord[]>('history', []);
+  const { rates, status, refetch } = useExchangeRates();
 
-  const units = UNIT_DATA[category]
+  useEffect(() => {
+    setFromUnit(UNIT_DATA[category][0].value);
+    setToUnit(UNIT_DATA[category][1].value);
+  }, [category]);
 
-  const handleCategoryChange = (newCategory: CategoryType) => {
-    setCategory(newCategory)
-    const newUnits = UNIT_DATA[newCategory]
-    setTopUnit(newUnits[0].value)
-    setBottomUnit(newUnits[1]?.value || newUnits[0].value)
-    setTopValue('')
-    setBottomValue('')
-  }
+  const result = useMemo(() => {
+    if (amount === 0) return 0;
+    if (category === 'currency' && rates) {
+       const fromRate = rates[fromUnit] || 1;
+       const toRate = rates[toUnit] || 1;
+       return (amount / fromRate) * toRate;
+    }
 
-  const convert = (value: number, from: string, to: string): number => {
+    const uFrom = UNIT_DATA[category].find(u => u.value === fromUnit);
+    const uTo = UNIT_DATA[category].find(u => u.value === toUnit);
+    if (!uFrom || !uTo) return 0;
+
     if (category === 'temperature') {
-      if (from === 'C' && to === 'F') return value * 9 / 5 + 32
-      if (from === 'F' && to === 'C') return (value - 32) * 5 / 9
-      return value
+        if (fromUnit === 'C' && toUnit === 'F') return (amount * 9/5) + 32;
+        if (fromUnit === 'F' && toUnit === 'C') return (amount - 32) * 5/9;
+        return amount;
     }
-    const fromUnit = units.find((u) => u.value === from)
-    const toUnit = units.find((u) => u.value === to)
-    if (!fromUnit || !toUnit) return 0
-    return (value * fromUnit.ratio) / toUnit.ratio
-  }
 
-  const addToHistory = (fromVal: number, from: string, toVal: number, to: string) => {
+    return (amount * uFrom.ratio) / uTo.ratio;
+  }, [amount, fromUnit, toUnit, category, rates]);
+
+  const handleSwap = () => {
+    setFromUnit(toUnit);
+    setToUnit(fromUnit);
+  };
+
+  const saveToHistory = () => {
+    if (amount === 0) return;
     const record: ConversionRecord = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       timestamp: Date.now(),
-      fromValue: fromVal,
-      fromUnit: from,
-      toValue: Math.round(toVal * 1000000) / 1000000,
-      toUnit: to,
-      category,
-    }
-    setHistory((prev) => [record, ...prev].slice(0, 10))
-  }
-
-  const handleTopValueChange = (value: string) => {
-    setTopValue(value)
-    if (value === '' || isNaN(Number(value))) {
-      setBottomValue('')
-      return
-    }
-    const num = Number(value)
-    const result = convert(num, topUnit, bottomUnit)
-    setBottomValue(String(Math.round(result * 1000000) / 1000000))
-    addToHistory(num, topUnit, result, bottomUnit)
-  }
-
-  const handleBottomValueChange = (value: string) => {
-    setBottomValue(value)
-    if (value === '' || isNaN(Number(value))) {
-      setTopValue('')
-      return
-    }
-    const num = Number(value)
-    const result = convert(num, bottomUnit, topUnit)
-    setTopValue(String(Math.round(result * 1000000) / 1000000))
-    addToHistory(num, bottomUnit, result, topUnit)
-  }
-
-  const handleTopUnitChange = (unit: string) => {
-    setTopUnit(unit)
-    if (topValue !== '') {
-      const num = Number(topValue)
-      const result = convert(num, unit, bottomUnit)
-      setBottomValue(String(Math.round(result * 1000000) / 1000000))
-    }
-  }
-
-  const handleBottomUnitChange = (unit: string) => {
-    setBottomUnit(unit)
-    if (topValue !== '') {
-      const num = Number(topValue)
-      const result = convert(num, topUnit, unit)
-      setBottomValue(String(Math.round(result * 1000000) / 1000000))
-    }
-  }
-
-  const resultText =
-    topValue && bottomValue
-      ? `${topValue} ${topUnit} = ${bottomValue} ${bottomUnit}`
-      : null
+      fromValue: amount,
+      fromUnit,
+      toValue: result,
+      toUnit,
+      category
+    };
+    setHistory([record, ...history].slice(0, 5));
+  };
 
   return (
     <>
-      <CategoryTabs activeCategory={category} onCategoryChange={handleCategoryChange} />
+      <CategoryTabs active={category} onChange={setCategory} />
+
+      {category === 'currency' && (
+        <div className="exchange-rate-info">
+          <span>Kurzy: {new Date().toLocaleDateString('cs-CZ')} | {status}</span>
+          <button onClick={refetch}>Aktualizovat</button>
+        </div>
+      )}
 
       <ConversionForm
-        units={units}
-        topValue={topValue}
-        bottomValue={bottomValue}
-        topUnit={topUnit}
-        bottomUnit={bottomUnit}
-        onTopValueChange={handleTopValueChange}
-        onBottomValueChange={handleBottomValueChange}
-        onTopUnitChange={handleTopUnitChange}
-        onBottomUnitChange={handleBottomUnitChange}
+        amount={amount}
+        setAmount={setAmount}
+        fromUnit={fromUnit}
+        setFromUnit={setFromUnit}
+        toUnit={toUnit}
+        setToUnit={setToUnit}
+        result={result}
+        category={category}
+        onSwap={handleSwap}
+        onSave={saveToHistory}
       />
-
-      {resultText && <div className="result-box">{resultText}</div>}
 
       <HistoryList history={history} onClear={() => setHistory([])} />
     </>
-  )
-}
-
-export default ConverterContainer
+  );
+};

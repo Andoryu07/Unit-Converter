@@ -1,65 +1,54 @@
-import { Unit } from '../types'
+import { UNIT_DATA } from '../data/units';
+import type { CategoryType } from '../types';
 
-interface ConversionFormProps {
-  units: Unit[]
-  topValue: string
-  bottomValue: string
-  topUnit: string
-  bottomUnit: string
-  onTopValueChange: (value: string) => void
-  onBottomValueChange: (value: string) => void
-  onTopUnitChange: (unit: string) => void
-  onBottomUnitChange: (unit: string) => void
+interface Props {
+  amount: number;
+  setAmount: (val: number) => void;
+  fromUnit: string;
+  setFromUnit: (val: string) => void;
+  toUnit: string;
+  setToUnit: (val: string) => void;
+  result: number;
+  category: CategoryType;
+  onSwap: () => void;
+  onSave: () => void;
 }
 
-function ConversionForm({
-  units,
-  topValue,
-  bottomValue,
-  topUnit,
-  bottomUnit,
-  onTopValueChange,
-  onBottomValueChange,
-  onTopUnitChange,
-  onBottomUnitChange,
-}: ConversionFormProps) {
+export const ConversionForm = ({ amount, setAmount, fromUnit, setFromUnit, toUnit, setToUnit, result, category, onSwap, onSave }: Props) => {
   return (
     <div className="converter-card">
       <div className="input-group">
         <input
           type="number"
-          value={topValue}
-          onChange={(e) => onTopValueChange(e.target.value)}
+          value={amount || ''}
+          onChange={(e) => setAmount(Number(e.target.value))}
           placeholder="0"
         />
-        <select value={topUnit} onChange={(e) => onTopUnitChange(e.target.value)}>
-          {units.map((unit) => (
-            <option key={unit.value} value={unit.value}>
-              {unit.value}
-            </option>
+        <select value={fromUnit} onChange={(e) => setFromUnit(e.target.value)}>
+          {UNIT_DATA[category].map((u) => (
+            <option key={u.value} value={u.value}>{u.value}</option>
           ))}
         </select>
       </div>
 
-      <div className="swap-icon">⇅</div>
+      <div className="swap-icon" onClick={onSwap}>⇅</div>
 
       <div className="input-group">
         <input
-          type="number"
-          value={bottomValue}
-          onChange={(e) => onBottomValueChange(e.target.value)}
-          placeholder="0"
+          type="text"
+          value={result.toFixed(2)}
+          readOnly
         />
-        <select value={bottomUnit} onChange={(e) => onBottomUnitChange(e.target.value)}>
-          {units.map((unit) => (
-            <option key={unit.value} value={unit.value}>
-              {unit.value}
-            </option>
+        <select value={toUnit} onChange={(e) => setToUnit(e.target.value)}>
+          {UNIT_DATA[category].map((u) => (
+            <option key={u.value} value={u.value}>{u.value}</option>
           ))}
         </select>
       </div>
-    </div>
-  )
-}
 
-export default ConversionForm
+      <button className="save-button" onClick={onSave}>
+        Uložit do historie
+      </button>
+    </div>
+  );
+};

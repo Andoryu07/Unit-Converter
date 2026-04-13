@@ -1,4 +1,4 @@
-import { Unit, CategoryType } from '../types';
+import type { Unit, CategoryType } from '../types';
 
 export const UNIT_DATA: Record<CategoryType, Unit[]> = {
   length: [
