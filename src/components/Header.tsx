@@ -1,7 +1,7 @@
 const Header = () => {
   return (
-    <header>
-      <h1>Units Convertor</h1>
+    <header className="header">
+      <h1>Konvertor jednotek</h1>
     </header>
   );
 };
