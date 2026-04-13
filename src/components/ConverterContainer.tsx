@@ -3,7 +3,6 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useExchangeRates } from '../hooks/useExchangeRates';
 import { UNIT_DATA } from '../data/units';
 import type { CategoryType, ConversionRecord } from '../types';
-//Components import
 import { CategoryTabs } from './CategoryTabs';
 import { ConversionForm } from './ConversionForm';
 import { HistoryList } from './HistoryList';
@@ -16,7 +15,6 @@ export const ConverterContainer = () => {
   const [history, setHistory] = useLocalStorage<ConversionRecord[]>('history', []);
   const { rates, status, refetch } = useExchangeRates();
 
-  //Unit reset when we switch categories
   useEffect(() => {
     setFromUnit(UNIT_DATA[category][0].value);
     setToUnit(UNIT_DATA[category][1].value);
@@ -34,7 +32,6 @@ export const ConverterContainer = () => {
     const uTo = UNIT_DATA[category].find(u => u.value === toUnit);
     if (!uFrom || !uTo) return 0;
 
-    //Special logistics for temperature
     if (category === 'temperature') {
         if (fromUnit === 'C' && toUnit === 'F') return (amount * 9/5) + 32;
         if (fromUnit === 'F' && toUnit === 'C') return (amount - 32) * 5/9;
@@ -64,14 +61,16 @@ export const ConverterContainer = () => {
   };
 
   return (
-    <div>
+    <>
       <CategoryTabs active={category} onChange={setCategory} />
+
       {category === 'currency' && (
-        <div>
-          Exchange rates: {new Date().toLocaleDateString()} | Status: {status}
-          <button onClick={refetch} style={{ marginLeft: '10px' }}>Update</button>
+        <div className="exchange-rate-info">
+          <span>Kurzy: {new Date().toLocaleDateString('cs-CZ')} | {status}</span>
+          <button onClick={refetch}>Aktualizovat</button>
         </div>
       )}
+
       <ConversionForm
         amount={amount}
         setAmount={setAmount}
@@ -84,7 +83,8 @@ export const ConverterContainer = () => {
         onSwap={handleSwap}
         onSave={saveToHistory}
       />
+
       <HistoryList history={history} onClear={() => setHistory([])} />
-    </div>
+    </>
   );
 };

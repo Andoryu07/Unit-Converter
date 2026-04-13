@@ -1,26 +1,30 @@
 import type { CategoryType } from '../types';
+
 interface Props {
   active: CategoryType;
   onChange: (cat: CategoryType) => void;
 }
 
+const CATEGORY_LABELS: Record<CategoryType, string> = {
+  length: 'Délka',
+  weight: 'Váha',
+  temperature: 'Teplota',
+  currency: 'Měna',
+  volume: 'Objem',
+};
+
 export const CategoryTabs = ({ active, onChange }: Props) => {
-  const categories: { id: CategoryType; label: string }[] = [
-    { id: 'length', label: 'Length' },
-    { id: 'weight', label: 'Weight' },
-    { id: 'temperature', label: 'Temperature' },
-    { id: 'currency', label: 'Currency' },
-    { id: 'volume', label: 'Volume' },
-  ];
+  const categories: CategoryType[] = ['length', 'weight', 'temperature', 'currency', 'volume'];
 
   return (
-    <div>
+    <div className="category-tabs">
       {categories.map((cat) => (
         <button
-          key={cat.id}
-          onClick={() => onChange(cat.id)}
+          key={cat}
+          className={`category-tab ${active === cat ? 'active' : ''}`}
+          onClick={() => onChange(cat)}
         >
-          {cat.label}
+          {CATEGORY_LABELS[cat]}
         </button>
       ))}
     </div>
