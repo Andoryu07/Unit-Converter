@@ -1,4 +1,4 @@
-import { Unit, CategoryType } from '../types';
+import type { Unit, CategoryType } from '../types';
 
 export const UNIT_DATA: Record<CategoryType, Unit[]> = {
   length: [
@@ -14,7 +14,7 @@ export const UNIT_DATA: Record<CategoryType, Unit[]> = {
   ],
   temperature: [
     { label: 'Celsius', value: 'C', ratio: 1 },
-    { label: 'Fahrenheit', value: 'F', ratio: 1 }, // Teplota vyžaduje speciální vzorec, ratio je zde jen placeholder
+    { label: 'Fahrenheit', value: 'F', ratio: 1 }, // Temperature requires a special formula, ratio is just a placeholder in this case
   ],
   currency: [
     { label: 'Czech Crown', value: 'CZK', ratio: 1 },

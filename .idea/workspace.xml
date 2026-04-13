@@ -2,16 +2,36 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ce231286-3e65-4dfe-b88b-f6568a29d8d5" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/unit-converter/návrh.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/unit-converter/src/components/CategoryTabs.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/unit-converter/src/components/ConversionForm.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/unit-converter/src/components/ConverterContainer.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/unit-converter/src/components/Header.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/unit-converter/src/components/HistoryList.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/unit-converter/src/data/units.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/unit-converter/src/types.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/docs/wireframe.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/eslint.config.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/návrh.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/package-lock.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/public/favicon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/public/icons.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/App.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/App.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/assets/hero.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/assets/react.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/assets/vite.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/components/CategoryTabs.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/components/ConversionForm.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/components/ConverterContainer.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/components/Header.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/components/HistoryList.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/data/units.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/index.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/main.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/theme.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/src/types.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/tsconfig.app.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/tsconfig.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/tsconfig.node.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit-converter/vite.config.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,13 +54,19 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "feature/converter-logic",
     "kotlin-language-version-configured": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Andoryu\IdeaProjects\KonverceJednotek" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
