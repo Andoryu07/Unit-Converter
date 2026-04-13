@@ -16,64 +16,35 @@ interface Props {
 }
 
 export const ConversionForm = ({ amount, setAmount, fromUnit, setFromUnit, toUnit, setToUnit, result, category, onSwap, onSave }: Props) => {
-  const commonInputStyle = {
-    padding: spacing.md,
-    borderRadius: borderRadius.md,
-    border: `1px solid ${colors.border}`,
-    fontSize: fontSize.md,
-    width: '100%'
-  };
-
   return (
-    <div style={{ backgroundColor: colors.surface, padding: spacing.lg, borderRadius: borderRadius.lg, boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-      <div style={{ marginBottom: spacing.md }}>
-        <label style={{ color: colors.textSecondary, display: 'block', marginBottom: spacing.xs }}>From Unit</label>
-        <div style={{ display: 'flex', gap: spacing.sm }}>
+    <div>
+      <div>
+        <label>From Unit</label>
+        <div>
           <input
             type="number"
             value={amount || ''}
             onChange={(e) => setAmount(Number(e.target.value))}
-            style={commonInputStyle}
             placeholder="0"
           />
-          <select value={fromUnit} onChange={(e) => setFromUnit(e.target.value)} style={{...commonInputStyle, width: '120px'}}>
+          <select value={fromUnit} onChange={(e) => setFromUnit(e.target.value)}>
             {UNIT_DATA[category].map(u => <option key={u.value} value={u.value}>{u.value}</option>)}
           </select>
         </div>
       </div>
 
-      <button onClick={onSwap} style={{
-        backgroundColor: colors.primary,
-        color: 'white',
-        border: 'none',
-        borderRadius: borderRadius.pill,
-        padding: spacing.sm,
-        cursor: 'pointer',
-        display: 'block',
-        margin: `${spacing.md} auto`
-      }}>⇅</button>
+      <button onClick={onSwap}>⇅</button>
 
-      <div style={{ marginBottom: spacing.lg }}>
-        <label style={{ color: colors.textSecondary, display: 'block', marginBottom: spacing.xs }}>To unit</label>
-        <div style={{ display: 'flex', gap: spacing.sm }}>
-          <input
-            type="text"
-            value={result.toFixed(2)}
-            readOnly
-            style={{...commonInputStyle, backgroundColor: colors.background}}
-          />
-          <select value={toUnit} onChange={(e) => setToUnit(e.target.value)} style={{...commonInputStyle, width: '120px'}}>
+      <div>
+        <label>To Unit</label>
+        <div>
+          <input type="text" value={result.toFixed(2)} readOnly />
+          <select value={toUnit} onChange={(e) => setToUnit(e.target.value)}>
             {UNIT_DATA[category].map(u => <option key={u.value} value={u.value}>{u.value}</option>)}
           </select>
         </div>
       </div>
-
-      <button
-        onClick={onSave}
-        style={{ width: '100%', padding: spacing.md, backgroundColor: colors.success, color: 'white', border: 'none', borderRadius: borderRadius.md, fontWeight: 'bold' }}
-      >
-        Save to history
-      </button>
+      <button onClick={onSave}>Save to history</button>
     </div>
   );
 };

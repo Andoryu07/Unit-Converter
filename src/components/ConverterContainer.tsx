@@ -3,7 +3,6 @@ import { useLocalStorage } from '../hooks/useLocalStorage';
 import { useExchangeRates } from '../hooks/useExchangeRates';
 import { UNIT_DATA } from '../data/units';
 import type { CategoryType, ConversionRecord } from '../types';
-import { colors, spacing } from '../theme';
 //Components import
 import { CategoryTabs } from './CategoryTabs';
 import { ConversionForm } from './ConversionForm';
@@ -65,18 +64,10 @@ export const ConverterContainer = () => {
   };
 
   return (
-    <div style={{
-      backgroundColor: colors.background,
-      padding: spacing.lg,
-      minHeight: '100vh',
-      display: 'flex',
-      flexDirection: 'column',
-      gap: spacing.lg
-    }}>
+    <div>
       <CategoryTabs active={category} onChange={setCategory} />
-
       {category === 'currency' && (
-        <div style={{ backgroundColor: colors.accentLight, padding: spacing.md, borderRadius: '8px', color: colors.accent }}>
+        <div>
           Exchange rates: {new Date().toLocaleDateString()} | Status: {status}
           <button onClick={refetch} style={{ marginLeft: '10px' }}>Update</button>
         </div>
