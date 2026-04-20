@@ -8,25 +8,29 @@ import { ConversionForm } from './ConversionForm';
 import { HistoryList } from './HistoryList';
 
 export const ConverterContainer = () => {
-  const [category, setCategory] = useState<CategoryType>('length');
-  const [amount, setAmount] = useState<number>(0);
+  const [category, setCategory] = useLocalStorage<CategoryType>('app_category', 'length');
+const [amount, setAmount] = useLocalStorage<number | ''>('app_amount', 0);
   const [fromUnit, setFromUnit] = useState(UNIT_DATA[category][0].value);
   const [toUnit, setToUnit] = useState(UNIT_DATA[category][1].value);
   const [history, setHistory] = useLocalStorage<ConversionRecord[]>('history', []);
   const { rates, status, refetch } = useExchangeRates();
 
-  useEffect(() => {
-    setFromUnit(UNIT_DATA[category][0].value);
-    setToUnit(UNIT_DATA[category][1].value);
-  }, [category]);
+ useEffect(() => {
+     const validUnits = UNIT_DATA[category].map(u => u.value);
+     if (!validUnits.includes(fromUnit) || !validUnits.includes(toUnit)) {
+       setFromUnit(UNIT_DATA[category][0].value);
+       setToUnit(UNIT_DATA[category][1].value);
+     }
+   }, [category]);
 
   const result = useMemo(() => {
-    if (amount === 0) return 0;
-    if (category === 'currency' && rates) {
-       const fromRate = rates[fromUnit] || 1;
-       const toRate = rates[toUnit] || 1;
-       return (amount / fromRate) * toRate;
-    }
+      if (amount === 0 || amount === '' || isNaN(Number(amount))) return 0;
+      const numAmount = Number(amount);
+      if (category === 'currency' && rates) {
+         const fromRate = rates[fromUnit] || 1;
+         const toRate = rates[toUnit] || 1;
+         return (numAmount / fromRate) * toRate;
+      }
 
     const uFrom = UNIT_DATA[category].find(u => u.value === fromUnit);
     const uTo = UNIT_DATA[category].find(u => u.value === toUnit);
@@ -35,7 +39,7 @@ export const ConverterContainer = () => {
     if (category === 'temperature') {
         if (fromUnit === 'C' && toUnit === 'F') return (amount * 9/5) + 32;
         if (fromUnit === 'F' && toUnit === 'C') return (amount - 32) * 5/9;
-        return amount;
+        return numAmount;
     }
 
     return (amount * uFrom.ratio) / uTo.ratio;
@@ -47,11 +51,11 @@ export const ConverterContainer = () => {
   };
 
   const saveToHistory = () => {
-    if (amount === 0) return;
+    if (amount === 0 || amount === '') return;
     const record: ConversionRecord = {
       id: crypto.randomUUID(),
       timestamp: Date.now(),
-      fromValue: amount,
+      fromValue: Number(amount),
       fromUnit,
       toValue: result,
       toUnit,
@@ -60,16 +64,28 @@ export const ConverterContainer = () => {
     setHistory([record, ...history].slice(0, 5));
   };
 
+    const getStatusStyles = () => {
+        if (status === 'loading') return { background: 'var(--loading-light)', color: 'var(--accent)' };
+        if (status === 'success') return { background: 'var(--success-light)', color: 'var(--success)' };
+        if (status === 'error') return { background: 'var(--error-light)', color: 'var(--error)' };
+        return {};
+      };
+
   return (
     <>
       <CategoryTabs active={category} onChange={setCategory} />
 
       {category === 'currency' && (
-        <div className="exchange-rate-info">
-          <span>Kurzy: {new Date().toLocaleDateString('cs-CZ')} | {status}</span>
-          <button onClick={refetch}>Aktualizovat</button>
-        </div>
-      )}
+              <div className="exchange-rate-info" style={getStatusStyles()}>
+                {status === 'loading' && <span>Načítání kurzů...</span>}
+                {status === 'success' && <span>Kurzy úspěšně aktualizovány</span>}
+                {status === 'error' && <span>Nepodařilo se načíst kurzy API</span>}
+
+                <button onClick={refetch} disabled={status === 'loading'}>
+                  Aktualizovat
+                </button>
+              </div>
+            )}
 
       <ConversionForm
         amount={amount}

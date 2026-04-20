@@ -2,8 +2,8 @@ import { UNIT_DATA } from '../data/units';
 import type { CategoryType } from '../types';
 
 interface Props {
-  amount: number;
-  setAmount: (val: number) => void;
+  amount: number | '';
+  setAmount: (val: number | '') => void;
   fromUnit: string;
   setFromUnit: (val: string) => void;
   toUnit: string;
@@ -20,9 +20,18 @@ export const ConversionForm = ({ amount, setAmount, fromUnit, setFromUnit, toUni
       <div className="input-group">
         <input
           type="number"
-          value={amount || ''}
-          onChange={(e) => setAmount(Number(e.target.value))}
+          value={amount}
+          onKeyDown={(e) => {
+                      if (['e', 'E', '+'].includes(e.key)) {
+                        e.preventDefault();
+                      }
+                  }}
+          onChange={(e) => {
+              const val = e.target.value;
+              setAmount(val === '' ? '' : Number(val));
+          }}
           placeholder="0"
+          inputMode="decimal"
         />
         <select value={fromUnit} onChange={(e) => setFromUnit(e.target.value)}>
           {UNIT_DATA[category].map((u) => (
