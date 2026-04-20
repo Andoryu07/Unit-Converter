@@ -14,7 +14,16 @@ interface Props {
 }
 
 export const HistoryList = ({ history, onClear }: Props) => {
-  if (history.length === 0) return null;
+  if (history.length === 0) {
+    return (
+      <div className="history-section">
+        <div className="history-header">
+          <h2>Historie konverzí</h2>
+        </div>
+        <p className="empty-history">Zatím žádné konverze</p>
+      </div>
+    );
+  }
 
   return (
     <div className="history-section">
